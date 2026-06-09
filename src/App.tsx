@@ -39,6 +39,7 @@ import {
   FileUp,
   Wrench,
 } from 'lucide-react';
+import logo from './assets/logo.svg';
 
 // Hero slideshow slides data
 const heroSlides = [
@@ -151,9 +152,9 @@ function HeroSlideshow() {
     }
   };
 
-  // Auto-rotate every 5 seconds
+  // Auto-rotate every 3 seconds
   useEffect(() => {
-    const interval = setInterval(nextSlide, 5000);
+    const interval = setInterval(nextSlide, 3000);
     return () => clearInterval(interval);
   }, [nextSlide]);
 
@@ -505,14 +506,16 @@ function App() {
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <a href="#home" className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-              <span
-                className={`text-2xl font-heading font-bold transition-colors ${
-                  isScrolled ? 'text-neutral-900' : 'text-white'
+              <div
+                className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                  isScrolled
+                    ? 'bg-white border-2 border-primary'
+                    : 'bg-white border-2 border-primary'
                 }`}
               >
+                <img src={logo} alt="INPET Logo" className="w-6 h-6 object-contain" />
+              </div>
+              <span className="text-2xl font-heading font-bold text-primary transition-colors">
                 INPET
               </span>
             </a>
