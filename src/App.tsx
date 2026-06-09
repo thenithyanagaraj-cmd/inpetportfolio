@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Menu,
   X,
@@ -39,87 +39,95 @@ import {
   FileUp,
   Wrench,
 } from 'lucide-react';
-import logo from './assets/logo.svg';
+import logo from './assets/INPET Logo- 2.png';
 
 // Hero slideshow slides data
 const heroSlides = [
   {
-    image: 'https://images.pexels.com/photo-1635070041070-450d2b92f6de?auto=compress&cs=tinysrgb&w=1920',
+    image: '/src/assets/image01.jpg',
     title: 'Defense Electronics',
     subtitle: 'Mission-critical power systems and ruggedized embedded solutions for defense applications',
   },
   {
-    image: 'https://images.pexels.com/photo-258019/pexels-photo-258019.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: '/src/assets/image02.jpg',
     title: 'Custom Power Supplies',
     subtitle: 'Precision-engineered power solutions for demanding industrial and military applications',
   },
   {
-    image: 'https://images.pexels.com/photo-8566526/pexels-photo-8566526.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: '/src/assets/image03.jpg',
     title: 'Embedded Systems',
     subtitle: 'Advanced embedded hardware and software solutions powering next-generation technology',
   },
   {
-    image: 'https://images.pexels.com/photo-9875441/pexels-photo-9875441.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    image: '/src/assets/image04.jpg',
     title: 'Solar & Industrial Energy Solutions',
     subtitle: 'Efficient power conversion and energy management systems for a sustainable future',
   },
 ];
 
-// Projects data with datasheet support
-const projectsData = [
+
+
+// Categories data with 5 products each
+const categoriesData = [
   {
-    id: 1,
-    image: 'https://images.pexels.com/photo-1635070041070-450d2b92f6de?auto=compress&cs=tinysrgb&w=600',
-    title: 'Military-Grade Power Supply',
     category: 'Defense',
-    description: 'Ruggedized 500W power supply unit for tactical communication systems.',
-    datasheetUrl: '/datasheets/military-power-supply.pdf',
-    hasDatasheet: true,
+    products: [
+      { id: 1, image: '/src/assets/about01.jpg', title: 'Military Power Supply', datasheetUrl: '/datasheets/mil-psu.pdf', hasDatasheet: true },
+      { id: 2, image: '/src/assets/about02.jpg', title: 'Radar Power Module', datasheetUrl: '/datasheets/radar.pdf', hasDatasheet: true },
+      { id: 3, image: '/src/assets/about03.jpg', title: 'Tactical Comm Unit', datasheetUrl: '/datasheets/comm.pdf', hasDatasheet: false },
+      { id: 4, image: '/src/assets/about04.jpg', title: 'Ruggedized Controller', datasheetUrl: '/datasheets/ruggedized.pdf', hasDatasheet: true },
+      { id: 5, image: '/src/assets/about01.jpg', title: 'Armored Vehicle ECU', datasheetUrl: '/datasheets/ecu.pdf', hasDatasheet: true },
+    ],
   },
   {
-    id: 2,
-    image: 'https://images.pexels.com/photo-1593941707882-a5bba14938c7?auto=compress&cs=tinysrgb&w=600',
-    title: 'EV Battery Management System',
     category: 'Automotive',
-    description: 'Advanced BMS with cell balancing and thermal monitoring for electric vehicles.',
-    datasheetUrl: '/datasheets/ev-bms.pdf',
-    hasDatasheet: true,
+    products: [
+      { id: 1, image: '/src/assets/about02.jpg', title: 'EV Battery Management', datasheetUrl: '/datasheets/bms.pdf', hasDatasheet: true },
+      { id: 2, image: '/src/assets/about03.jpg', title: 'OBC Charger Module', datasheetUrl: '/datasheets/obc.pdf', hasDatasheet: true },
+      { id: 3, image: '/src/assets/about04.jpg', title: 'ADAS Controller', datasheetUrl: '/datasheets/adas.pdf', hasDatasheet: false },
+      { id: 4, image: '/src/assets/about01.jpg', title: 'DC-DC Converter', datasheetUrl: '/datasheets/dcdc.pdf', hasDatasheet: true },
+      { id: 5, image: '/src/assets/about02.jpg', title: 'Motor Drive Unit', datasheetUrl: '/datasheets/mdu.pdf', hasDatasheet: true },
+    ],
   },
   {
-    id: 3,
-    image: 'https://images.pexels.com/photo-416405/pexels-photo-416405.jpeg?auto=compress&cs=tinysrgb&w=600',
-    title: 'Industrial Motor Controller',
     category: 'Industrial',
-    description: 'Multi-axis motor control system with CANopen protocol integration.',
-    datasheetUrl: '/datasheets/motor-controller.pdf',
-    hasDatasheet: true,
+    products: [
+      { id: 1, image: '/src/assets/about02.jpg', title: 'Industrial Motor Controller', datasheetUrl: '/datasheets/motor.pdf', hasDatasheet: true },
+      { id: 2, image: '/src/assets/about03.jpg', title: 'PLC Module', datasheetUrl: '/datasheets/plc.pdf', hasDatasheet: true },
+      { id: 3, image: '/src/assets/about04.jpg', title: 'SCADA Interface Unit', datasheetUrl: '/datasheets/scada.pdf', hasDatasheet: false },
+      { id: 4, image: '/src/assets/about01.jpg', title: 'HMI Panel Controller', datasheetUrl: '/datasheets/hmi.pdf', hasDatasheet: true },
+      { id: 5, image: '/src/assets/about02.jpg', title: 'Industrial IoT Gateway', datasheetUrl: '/datasheets/iot-ind.pdf', hasDatasheet: true },
+    ],
   },
   {
-    id: 4,
-    image: 'https://images.pexels.com/photo-9875441/pexels-photo-9875441.jpeg?auto=compress&cs=tinysrgb&w=600',
-    title: 'Solar Inverter System',
     category: 'Solar Energy',
-    description: '10kW grid-tied solar inverter with advanced MPPT algorithm.',
-    datasheetUrl: '/datasheets/solar-inverter.pdf',
-    hasDatasheet: true,
+    products: [
+      { id: 1, image: '/src/assets/about03.jpg', title: 'Solar Inverter 10kW', datasheetUrl: '/datasheets/inverter.pdf', hasDatasheet: true },
+      { id: 2, image: '/src/assets/about04.jpg', title: 'MPPT Charge Controller', datasheetUrl: '/datasheets/mppt.pdf', hasDatasheet: true },
+      { id: 3, image: '/src/assets/about01.jpg', title: 'String Combiner Box', datasheetUrl: '/datasheets/combiner.pdf', hasDatasheet: true },
+      { id: 4, image: '/src/assets/about02.jpg', title: 'Energy Storage BMS', datasheetUrl: '/datasheets/storage.pdf', hasDatasheet: false },
+      { id: 5, image: '/src/assets/about03.jpg', title: 'Grid Tie Interface', datasheetUrl: '/datasheets/grid.pdf', hasDatasheet: true },
+    ],
   },
   {
-    id: 5,
-    image: 'https://images.pexels.com/photo-8566526/pexels-photo-8566526.jpeg?auto=compress&cs=tinysrgb&w=600',
-    title: 'IoT Gateway Module',
     category: 'Embedded',
-    description: 'Multi-protocol IoT gateway with edge computing capabilities.',
-    datasheetUrl: '/datasheets/iot-gateway.pdf',
-    hasDatasheet: true,
+    products: [
+      { id: 1, image: '/src/assets/about04.jpg', title: 'IoT Gateway Module', datasheetUrl: '/datasheets/iot-gw.pdf', hasDatasheet: true },
+      { id: 2, image: '/src/assets/about01.jpg', title: 'STM32 Dev Board', datasheetUrl: '/datasheets/stm32.pdf', hasDatasheet: true },
+      { id: 3, image: '/src/assets/about02.jpg', title: 'ARM Cortex Controller', datasheetUrl: '/datasheets/arm.pdf', hasDatasheet: true },
+      { id: 4, image: '/src/assets/about03.jpg', title: 'Embedded Linux SOM', datasheetUrl: '/datasheets/linux.pdf', hasDatasheet: false },
+      { id: 5, image: '/src/assets/about04.jpg', title: 'RTOS Control Board', datasheetUrl: '/datasheets/rtos.pdf', hasDatasheet: true },
+    ],
   },
   {
-    id: 6,
-    image: 'https://images.pexels.com/photo-258019/pexels-photo-258019.jpeg?auto=compress&cs=tinysrgb&w=600',
-    title: 'Medical Device Controller',
     category: 'Healthcare',
-    description: 'Precision embedded controller for medical diagnostic equipment.',
-    datasheetUrl: '/datasheets/medical-controller.pdf',
-    hasDatasheet: false,
+    products: [
+      { id: 1, image: '/src/assets/about01.jpg', title: 'Medical Device Controller', datasheetUrl: '/datasheets/med-ctrl.pdf', hasDatasheet: false },
+      { id: 2, image: '/src/assets/about02.jpg', title: 'Patient Monitor PSU', datasheetUrl: '/datasheets/pmon.pdf', hasDatasheet: true },
+      { id: 3, image: '/src/assets/about03.jpg', title: 'Diagnostic Equipment Board', datasheetUrl: '/datasheets/diag.pdf', hasDatasheet: true },
+      { id: 4, image: '/src/assets/about04.jpg', title: 'Infusion Pump Controller', datasheetUrl: '/datasheets/infusion.pdf', hasDatasheet: false },
+      { id: 5, image: '/src/assets/about01.jpg', title: 'Portable ECG Module', datasheetUrl: '/datasheets/ecg.pdf', hasDatasheet: true },
+    ],
   },
 ];
 
@@ -230,60 +238,109 @@ function HeroSlideshow() {
   );
 }
 
-// Project Card Component with Datasheet
-function ProjectCard({ project, index }: { project: typeof projectsData[0]; index: number }) {
+// Global singleton ticker - ONE interval, all cards sync to it
+let globalTick = 0;
+const globalListeners = new Set<() => void>();
+setInterval(() => {
+  globalTick += 1;
+  globalListeners.forEach((fn) => fn());
+}, 5000);
+
+function useGlobalTick() {
+  const [tick, setTick] = useState(globalTick);
+  useEffect(() => {
+    const update = () => setTick((t) => t + 1);
+    globalListeners.add(update);
+    return () => { globalListeners.delete(update); };
+  }, []);
+  return tick;
+}
+
+// Category Card Component with auto-slideshow
+function CategoryCard({ category, products, index }: {
+  category: string;
+  products: typeof categoriesData[0]['products'];
+  index: number;
+}) {
+  const [current, setCurrent] = useState(0);
+  const [fading, setFading] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const tick = useGlobalTick();
+  useEffect(() => {
+    if (isHovered) return;
+    setFading(true);
+    setTimeout(() => {
+      setCurrent((prev) => (prev + 1) % products.length);
+      setFading(false);
+    }, 400);
+  }, [tick]);
+
+  const product = products[current];
+
   const handleViewDatasheet = () => {
-    if (project.hasDatasheet) {
-      window.open(project.datasheetUrl, '_blank');
+    const p = products[current];
+    if (p.hasDatasheet) {
+      window.open(p.datasheetUrl, '_blank');
     }
   };
 
   return (
-    <div
-      className={`reveal stagger-${(index % 4) + 1} group bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300`}
-    >
-      <div className="aspect-video overflow-hidden relative">
-        <img
-          src={project.image}
-          alt={project.title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-        />
-        {project.hasDatasheet && (
-          <div className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-primary text-white text-xs px-2 py-1 rounded-full flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <FileText className="w-3 h-3 mr-1" />
-            Datasheet
+    <div className={`reveal stagger-${(index % 4) + 1} flex flex-col items-center`}>
+      <div className="group bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 w-full relative"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}>
+        <div className="absolute top-3 right-3 z-10 flex gap-1">
+          {products.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                setFading(true);
+                setTimeout(() => { setCurrent(i); setFading(false); }, 400);
+              }}
+              className={`transition-all duration-300 rounded-full ${
+                i === current ? 'w-4 h-2 bg-primary' : 'w-2 h-2 bg-white/70'
+              }`}
+            />
+          ))}
+        </div>
+        <div className="aspect-video overflow-hidden relative">
+          <img
+            src={product.image}
+            alt={product.title}
+            className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
+              fading ? 'opacity-0 scale-105' : 'opacity-100 scale-100'
+            }`}
+          />
+          <div className="absolute inset-0 bg-neutral-900/80 flex flex-col justify-center items-center px-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
+            <button
+              onClick={handleViewDatasheet}
+              disabled={!product.hasDatasheet}
+              className={`text-xs sm:text-sm font-medium flex items-center px-4 py-2 rounded-lg ${
+                product.hasDatasheet
+                  ? 'text-white bg-primary hover:bg-red-700 transition-colors cursor-pointer'
+                  : 'text-neutral-400 bg-neutral-700 cursor-not-allowed'
+              }`}
+            >
+              <FileText className="w-3 h-3 mr-1.5" />
+              {product.hasDatasheet ? 'View Datasheet' : 'No Datasheet'}
+            </button>
           </div>
-        )}
-      </div>
-      <div className="p-4 sm:p-6">
-        <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-          {project.category}
-        </span>
-        <h3 className="text-base sm:text-lg font-semibold text-neutral-900 mt-2 mb-2 sm:mb-3">
-          {project.title}
-        </h3>
-        <p className="text-neutral-600 text-xs sm:text-sm mb-3 sm:mb-4">{project.description}</p>
-
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-2">
-          <button className="text-xs sm:text-sm font-medium text-neutral-700 hover:text-primary transition-colors flex items-center px-2.5 sm:px-3 py-1.5 bg-neutral-100 hover:bg-primary/10 rounded-lg">
-            View Details
-            <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5 ml-1 sm:ml-1.5" />
-          </button>
-
-          <button
-            onClick={handleViewDatasheet}
-            disabled={!project.hasDatasheet}
-            className={`text-xs sm:text-sm font-medium flex items-center px-2.5 sm:px-3 py-1.5 rounded-lg ${
-              project.hasDatasheet
-                ? 'text-white bg-primary hover:bg-primary-600 transition-colors cursor-pointer'
-                : 'text-neutral-400 bg-neutral-100 cursor-not-allowed'
+        </div>
+        <div className="p-3 sm:p-4">
+          <p
+            className={`text-sm sm:text-base font-semibold text-neutral-900 text-center transition-all duration-400 ${
+              fading ? 'opacity-0 translate-y-1' : 'opacity-100 translate-y-0'
             }`}
           >
-            View Datasheet
-            <FileText className="w-3 h-3 sm:w-3.5 sm:h-3.5 ml-1 sm:ml-1.5" />
-          </button>
+            {product.title}
+          </p>
         </div>
+      </div>
+      <div className="mt-3 text-center">
+        <span className="text-sm sm:text-base font-bold text-primary uppercase tracking-wider">
+          {category}
+        </span>
       </div>
     </div>
   );
@@ -445,7 +502,7 @@ function App() {
       setIsScrolled(window.scrollY > 50);
       setShowBackToTop(window.scrollY > 500);
 
-      const sections = ['home', 'about', 'industries', 'services', 'technology', 'projects', 'why-us', 'careers', 'contact'];
+      const sections = ['home', 'about', 'industries', 'services', 'technology', 'products', 'why-us', 'careers', 'contact'];
       for (const section of sections.reverse()) {
         const element = document.getElementById(section);
         if (element && window.scrollY >= element.offsetTop - 100) {
@@ -489,7 +546,7 @@ function App() {
     { name: 'Industries', href: '#industries' },
     { name: 'Services', href: '#services' },
     { name: 'Technology', href: '#technology' },
-    { name: 'Projects', href: '#projects' },
+    { name: 'Products', href: '#products' },
     { name: 'Careers', href: '#careers' },
     { name: 'Contact', href: '#contact' },
   ];
@@ -507,17 +564,18 @@ function App() {
             {/* Logo */}
             <a href="#home" className="flex items-center space-x-3">
               <div
-                className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                className={`w-14 h-14 rounded-lg flex items-center justify-center transition-all duration-300 ${
                   isScrolled
-                    ? 'bg-white border-2 border-primary'
-                    : 'bg-white border-2 border-primary'
+                    ? 'bg-white'
+                    : 'bg-white'
                 }`}
               >
-                <img src={logo} alt="INPET Logo" className="w-6 h-6 object-contain" />
+                <img src={logo} alt="INPET Logo" className="w-11 h-11 object-contain" />
               </div>
-              <span className="text-2xl font-heading font-bold text-primary transition-colors">
-                INPET
-              </span>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold text-primary leading-tight" style={{fontFamily: 'Ethnocentric, sans-serif'}}>INPET</span>
+                <span className={`text-xs font-semibold tracking-wide leading-tight ${isScrolled ? 'text-neutral-900' : 'text-white'}`} style={{fontFamily: 'Ethnocentric, sans-serif'}}>Innovative Power and<br/>Embedded Technology</span>
+              </div>
             </a>
 
             {/* Desktop Navigation */}
@@ -533,8 +591,8 @@ function App() {
                   {link.name}
                 </a>
               ))}
-              <a href="#contact" className="btn-primary text-sm">
-                Get a Quote
+              <a href="https://www.inpet.in/webmail" target="_blank" rel="noopener noreferrer" className="btn-primary text-base px-6 py-2.5 self-center">
+                Sign In
               </a>
             </div>
 
@@ -568,11 +626,13 @@ function App() {
                 </a>
               ))}
               <a
-                href="#contact"
+                href="https://www.inpet.in/webmail"
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => setIsMenuOpen(false)}
                 className="block py-3 px-4 btn-primary text-center mt-4"
               >
-                Get a Quote
+                Sign In
               </a>
             </div>
           </div>
@@ -630,14 +690,14 @@ function App() {
               <div className="space-y-3 sm:space-y-4">
                 <div className="rounded-xl sm:rounded-2xl overflow-hidden shadow-lg aspect-[4/3]">
                   <img
-                    src="https://images.pexels.com/photos/8566526/pexels-photo-8566526.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    src="/src/assets/about01.jpg"
                     alt="Circuit board design"
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   />
                 </div>
                 <div className="rounded-xl sm:rounded-2xl overflow-hidden shadow-lg aspect-square">
                   <img
-                    src="https://images.pexels.com/photo-1635070041070-450d2b92f6de?auto=compress&cs=tinysrgb&w=600"
+                    src="/src/assets/about02.jpg"
                     alt="Engineering workspace"
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   />
@@ -646,14 +706,14 @@ function App() {
               <div className="space-y-3 sm:space-y-4 pt-4 sm:pt-8">
                 <div className="rounded-xl sm:rounded-2xl overflow-hidden shadow-lg aspect-square">
                   <img
-                    src="https://images.pexels.com/photos/416405/pexels-photo-416405.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    src="/src/assets/about03.jpg"
                     alt="Power systems"
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   />
                 </div>
                 <div className="rounded-xl sm:rounded-2xl overflow-hidden shadow-lg aspect-[4/3]">
                   <img
-                    src="https://images.pexels.com/photos/258019/pexels-photo-258019.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    src="/src/assets/about04.jpg"
                     alt="Technology lab"
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   />
@@ -871,7 +931,7 @@ function App() {
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent rounded-3xl"></div>
                 <div className="absolute inset-8 bg-neutral-800 rounded-2xl flex items-center justify-center overflow-hidden">
                   <img
-                    src="https://images.pexels.com/photo-1518770660439-4636190af373?auto=compress&cs=tinysrgb&w=800"
+                    src="/src/assets/tech01.jpg"
                     alt="Technology illustration"
                     className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
                   />
@@ -885,24 +945,29 @@ function App() {
         </div>
       </section>
 
-      {/* Projects Section with Datasheets */}
-      <section id="projects" className="section-padding bg-neutral-50">
+      {/* Products Section with Datasheets */}
+      <section id="products" className="section-padding bg-neutral-50">
         <div className="container-custom">
           <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
             <span className="reveal text-primary font-semibold text-xs sm:text-sm tracking-wider uppercase mb-3 sm:mb-4 block">
-              Our Projects
+              Our Products
             </span>
             <h2 className="reveal stagger-1 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-neutral-900 mb-4 sm:mb-6">
               Engineering Excellence in Action
             </h2>
             <p className="reveal stagger-2 text-neutral-600 text-sm sm:text-base md:text-lg">
-              A showcase of our innovative projects across diverse industries and applications.
+              A showcase of our innovative products across diverse industries and applications.
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {projectsData.map((project, index) => (
-              <ProjectCard key={project.id} project={project} index={index} />
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {categoriesData.map((cat, index) => (
+              <CategoryCard
+                key={cat.category}
+                category={cat.category}
+                products={cat.products}
+                index={index}
+              />
             ))}
           </div>
         </div>
@@ -952,7 +1017,7 @@ function App() {
                   {
                     icon: Clock,
                     title: 'On-Time Delivery',
-                    description: 'Proven track record of delivering projects on schedule, regardless of complexity.',
+                    description: 'Proven track record of delivering products on schedule, regardless of complexity.',
                   },
                   {
                     icon: Users,
@@ -997,7 +1062,7 @@ function App() {
                 Let's Work Together
               </h2>
               <p className="reveal stagger-2 text-neutral-600 text-sm sm:text-base md:text-lg mb-6 sm:mb-8">
-                Ready to discuss your project? Get in touch with our team to explore how we can help.
+                Ready to discuss your product? Get in touch with our team to explore how we can help.
               </p>
 
               <div className="reveal stagger-3 space-y-4 sm:space-y-6 mb-8 sm:mb-12">
@@ -1143,10 +1208,10 @@ function App() {
             {/* Company Info */}
             <div className="col-span-2 lg:col-span-1">
               <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg flex items-center justify-center">
-                  <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                <div className="w-14 h-14 bg-white rounded-lg flex items-center justify-center">
+                  <img src={logo} alt="INPET Logo" className="w-11 h-11 object-contain" />
                 </div>
-                <span className="text-xl sm:text-2xl font-heading font-bold">INPET</span>
+                <span className="text-xl sm:text-2xl font-bold text-primary" style={{fontFamily: 'Ethnocentric, sans-serif'}}>INPET</span>
               </div>
               <p className="text-neutral-400 text-xs sm:text-sm mb-4 sm:mb-6">
                 Innovative Power and Embedded Technology company delivering cutting-edge solutions for critical industries worldwide.

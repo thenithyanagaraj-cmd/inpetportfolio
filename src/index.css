@@ -1,5 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
 
+@font-face {
+  font-family: 'Ethnocentric';
+  src: url('./fonts/ethnocentric rg.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
