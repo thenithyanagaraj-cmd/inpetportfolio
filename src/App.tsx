@@ -347,24 +347,44 @@ function CategoryCard({ category, products, index }: {
 }
 
 // Submit Resume Section Component
+// Job listings data
+const jobListings = [
+  { id: 1, title: 'Senior Embedded Engineer', location: 'Bangalore, India', type: 'Full-time', tag: 'Engineering' },
+  { id: 2, title: 'Power Electronics Engineer', location: 'Bangalore, India', type: 'Full-time', tag: 'Engineering' },
+  { id: 3, title: 'PCB Design Engineer', location: 'Bangalore, India', type: 'Full-time', tag: 'Hardware' },
+  { id: 4, title: 'Firmware Developer', location: 'Bangalore, India', type: 'Full-time', tag: 'Software' },
+  { id: 5, title: 'Test Engineer', location: 'Bangalore, India', type: 'Full-time', tag: 'Quality' },
+  { id: 6, title: 'Technical Project Manager', location: 'Bangalore, India', type: 'Full-time', tag: 'Management' },
+];
+
 function SubmitResumeSection() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    resume: null as File | null,
-  });
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState('');
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', job: '', resume: null as File | null });
   const [fileName, setFileName] = useState('');
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const openModal = (jobTitle: string) => {
+    setSelectedJob(jobTitle);
+    setFormData(prev => ({ ...prev, job: jobTitle }));
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedJob('');
+    setFormData({ name: '', email: '', phone: '', job: '', resume: null });
+    setFileName('');
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type === 'application/pdf') {
-      setFormData((prev) => ({ ...prev, resume: file }));
+      setFormData(prev => ({ ...prev, resume: file }));
       setFileName(file.name);
     } else if (file) {
       alert('Please upload a PDF file');
@@ -373,34 +393,103 @@ function SubmitResumeSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission - integrate with backend as needed
-    console.log('Resume submitted:', formData);
-    alert('Thank you for submitting your resume. We will review it and get back to you if there is a suitable opportunity.');
-    setFormData({ name: '', email: '', phone: '', resume: null });
-    setFileName('');
+    console.log('Application submitted:', formData);
+    alert('Thank you for applying! We will review your application and get back to you soon.');
+    closeModal();
   };
 
   return (
-    <section id="careers" className="py-10 sm:py-16 bg-neutral-50">
-      <div className="container-custom">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-6 sm:mb-10">
+    <>
+      <section id="careers" className="py-10 sm:py-16 bg-neutral-50">
+        <div className="container-custom">
+          <div className="text-center mb-8 sm:mb-12">
             <span className="reveal text-primary font-semibold text-xs sm:text-sm tracking-wider uppercase mb-3 sm:mb-4 block">
               Careers
             </span>
             <h2 className="reveal stagger-1 text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-neutral-900 mb-3 sm:mb-4">
-              Submit Your Resume
+              Join Our Team
             </h2>
             <p className="reveal stagger-2 text-neutral-600 text-sm sm:text-base">
-              We're always looking for talented engineers. Share your profile with us.
+              We're always looking for talented engineers. Find your role below.
             </p>
           </div>
 
-          <div className="reveal stagger-3 bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 shadow-sm border border-neutral-200">
-            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {jobListings.map((job) => (
+              <div
+                key={job.id}
+                className="reveal bg-white rounded-xl border border-neutral-200 p-5 sm:p-6 hover:border-primary hover:shadow-md transition-all duration-300 group flex flex-col justify-between"
+              >
+                <div>
+                  <h4 className="text-base sm:text-lg font-semibold text-neutral-900 mb-3">{job.title}</h4>
+                  <div className="flex flex-wrap items-center gap-2 mb-4">
+                    <span className="flex items-center text-xs text-neutral-500">
+                      <MapPin className="w-3 h-3 mr-1" />
+                      {job.location}
+                    </span>
+                    <span className="text-xs text-neutral-500">{job.type}</span>
+                    <span className="text-xs font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                      {job.tag}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => openModal(job.title)}
+                  className="mt-2 w-full py-2.5 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2 group-hover:gap-3"
+                >
+                  Apply Now <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Modal Overlay */}
+      {modalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
+          onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-5 sm:p-6 border-b border-neutral-200">
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5 sm:mb-2">
-                  <User className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5 sm:mr-2" />
+                <h3 className="text-lg sm:text-xl font-bold text-neutral-900">Apply for Position</h3>
+                <p className="text-xs text-neutral-500 mt-0.5">{selectedJob}</p>
+              </div>
+              <button
+                onClick={closeModal}
+                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-neutral-100 transition-colors text-neutral-500 hover:text-neutral-900"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
+              {/* Job dropdown */}
+              <div>
+                <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5">
+                  Position
+                </label>
+                <select
+                  name="job"
+                  value={formData.job}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 sm:px-4 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
+                >
+                  <option value="">Select a position</option>
+                  {jobListings.map(j => (
+                    <option key={j.id} value={j.title}>{j.title}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5">
+                  <User className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" />
                   Full Name
                 </label>
                 <input
@@ -409,15 +498,15 @@ function SubmitResumeSection() {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
+                  className="w-full px-3 sm:px-4 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
                   placeholder="John Doe"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5 sm:mb-2">
-                    <Mail className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5 sm:mr-2" />
+                  <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5">
+                    <Mail className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" />
                     Email
                   </label>
                   <input
@@ -426,14 +515,14 @@ function SubmitResumeSection() {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
+                    className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
                     placeholder="john@example.com"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5 sm:mb-2">
-                    <Phone className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5 sm:mr-2" />
-                    Phone Number
+                  <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5">
+                    <Phone className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" />
+                    Phone
                   </label>
                   <input
                     type="tel"
@@ -441,53 +530,50 @@ function SubmitResumeSection() {
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
+                    className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
                     placeholder="+91 98765 43210"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5 sm:mb-2">
-                  <FileUp className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5 sm:mr-2" />
+                <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5">
+                  <FileUp className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" />
                   Resume (PDF)
                 </label>
-                <div className="relative">
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileChange}
-                    required
-                    className="hidden"
-                    id="resume-upload"
-                  />
-                  <label
-                    htmlFor="resume-upload"
-                    className="flex items-center justify-center w-full px-3 sm:px-4 py-4 sm:py-6 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors"
-                  >
-                    <div className="text-center">
-                      <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-neutral-400 mx-auto mb-1.5 sm:mb-2" />
-                      <p className="text-xs sm:text-sm text-neutral-600">
-                        {fileName || 'Click to upload or drag and drop'}
-                      </p>
-                      <p className="text-xs text-neutral-400 mt-1">PDF only (max 5MB)</p>
-                    </div>
-                  </label>
-                </div>
+                <input type="file" accept=".pdf" onChange={handleFileChange} required className="hidden" id="modal-resume-upload" />
+                <label
+                  htmlFor="modal-resume-upload"
+                  className="flex items-center justify-center w-full px-4 py-4 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors"
+                >
+                  <div className="text-center">
+                    <Upload className="w-6 h-6 text-neutral-400 mx-auto mb-1" />
+                    <p className="text-xs text-neutral-600">{fileName || 'Click to upload or drag and drop'}</p>
+                    <p className="text-xs text-neutral-400 mt-0.5">PDF only (max 5MB)</p>
+                  </div>
+                </label>
               </div>
 
-              <button
-                type="submit"
-                className="w-full btn-primary group"
-              >
-                Submit Resume
-                <Send className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-              </button>
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="flex-1 py-2.5 border border-neutral-300 text-neutral-700 text-sm font-medium rounded-lg hover:bg-neutral-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+                >
+                  Submit Application <Send className="w-4 h-4" />
+                </button>
+              </div>
             </form>
           </div>
         </div>
-      </div>
-    </section>
+      )}
+    </>
   );
 }
 
@@ -1194,10 +1280,11 @@ function App() {
                     Send Message
                     <Send className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </button>
-                </form>
-              </div>
+            </form>
             </div>
           </div>
+
+        </div>
         </div>
       </section>
 
