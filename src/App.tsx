@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Menu,
+  Briefcase,
   X,
   ChevronUp,
   ChevronRight,
@@ -196,19 +197,19 @@ function HeroSlideshow() {
               {heroSlides[currentSlide].title}
             </span>
           </div>
-          <h1 className="animate-fade-in text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold text-white leading-tight mb-4 sm:mb-6">
+          <h1 className="animate-fade-in text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-white leading-tight mb-4 sm:mb-6">
             Engineering the Future of{' '}
             <span className="text-primary">Power & Embedded Technology</span>
           </h1>
-          <p className="animate-fade-in text-base sm:text-lg md:text-xl text-neutral-300 mb-6 sm:mb-8 max-w-2xl transition-all duration-500">
+          <p className="animate-fade-in text-sm sm:text-base md:text-lg text-neutral-300 mb-6 sm:mb-8 max-w-2xl transition-all duration-500">
             {heroSlides[currentSlide].subtitle}
           </p>
-          <div className="animate-fade-in flex flex-col sm:flex-row gap-3 sm:gap-4">
-            <a href="#services" className="btn-primary group">
+          <div className="animate-fade-in flex flex-row gap-2">
+            <a href="#services" className="btn-primary group text-xs px-3 py-1.5">
               Explore Our Services
               <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </a>
-            <a href="#about" className="btn-white">
+            <a href="#about" className="btn-white text-xs px-3 py-1.5">
               Learn More About Us
             </a>
           </div>
@@ -349,18 +350,17 @@ function CategoryCard({ category, products, index }: {
 // Submit Resume Section Component
 // Job listings data
 const jobListings = [
-  { id: 1, title: 'Senior Embedded Engineer', location: 'Bangalore, India', type: 'Full-time', tag: 'Engineering' },
-  { id: 2, title: 'Power Electronics Engineer', location: 'Bangalore, India', type: 'Full-time', tag: 'Engineering' },
-  { id: 3, title: 'PCB Design Engineer', location: 'Bangalore, India', type: 'Full-time', tag: 'Hardware' },
-  { id: 4, title: 'Firmware Developer', location: 'Bangalore, India', type: 'Full-time', tag: 'Software' },
-  { id: 5, title: 'Test Engineer', location: 'Bangalore, India', type: 'Full-time', tag: 'Quality' },
-  { id: 6, title: 'Technical Project Manager', location: 'Bangalore, India', type: 'Full-time', tag: 'Management' },
+  { id: 1, title: 'Senior Embedded Engineer', location: 'Bangalore, India', type: 'Full-time', tag: 'Engineering', exp: '4+ years', desc: 'Design and develop embedded firmware for STM32 and ARM Cortex platforms.' },
+  { id: 2, title: 'Power Electronics Engineer', location: 'Bangalore, India', type: 'Full-time', tag: 'Engineering', exp: '3+ years', desc: 'Design SMPS, DC-DC converters and power systems for industrial applications.' },
+  { id: 3, title: 'PCB Design Engineer', location: 'Bangalore, India', type: 'Full-time', tag: 'Hardware', exp: '2+ years', desc: 'Multi-layer PCB design with signal integrity and EMI/EMC compliance.' },
+  { id: 4, title: 'Firmware Developer', location: 'Bangalore, India', type: 'Full-time', tag: 'Software', exp: '2+ years', desc: 'Bare-metal and RTOS-based firmware development for embedded systems.' },
+  { id: 5, title: 'Test Engineer', location: 'Bangalore, India', type: 'Full-time', tag: 'Quality', exp: '2+ years', desc: 'Develop and execute test plans for power electronics and embedded products.' },
 ];
 
 function SubmitResumeSection() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState('');
-  const [formData, setFormData] = useState({ name: '', email: '', phone: '', job: '', resume: null as File | null });
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', job: '', experience: '', notice: '', company: '', specialization: [] as string[], linkedin: '', portfolio: '', cover: '', resume: null as File | null });
   const [fileName, setFileName] = useState('');
 
   const openModal = (jobTitle: string) => {
@@ -372,7 +372,7 @@ function SubmitResumeSection() {
   const closeModal = () => {
     setModalOpen(false);
     setSelectedJob('');
-    setFormData({ name: '', email: '', phone: '', job: '', resume: null });
+    setFormData({ name: '', email: '', phone: '', job: '', experience: '', notice: '', company: '', specialization: [], linkedin: '', portfolio: '', cover: '', resume: null });
     setFileName('');
   };
 
@@ -406,41 +406,168 @@ function SubmitResumeSection() {
             <span className="reveal text-primary font-semibold text-xs sm:text-sm tracking-wider uppercase mb-3 sm:mb-4 block">
               Careers
             </span>
-            <h2 className="reveal stagger-1 text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-neutral-900 mb-3 sm:mb-4">
+            <h2 className="reveal stagger-1 text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-neutral-900 mb-2">
               Join Our Team
             </h2>
-            <p className="reveal stagger-2 text-neutral-600 text-sm sm:text-base">
-              We're always looking for talented engineers. Find your role below.
+            <p className="reveal stagger-2 text-neutral-600 text-sm sm:text-base max-w-xl mx-auto">
+              We are actively hiring for the roles below. Don't see a fit? Apply anyway — we'll reach out when the right opportunity comes up.
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {jobListings.map((job) => (
-              <div
-                key={job.id}
-                className="reveal bg-white rounded-xl border border-neutral-200 p-5 sm:p-6 hover:border-primary hover:shadow-md transition-all duration-300 group flex flex-col justify-between"
-              >
-                <div>
-                  <h4 className="text-base sm:text-lg font-semibold text-neutral-900 mb-3">{job.title}</h4>
-                  <div className="flex flex-wrap items-center gap-2 mb-4">
-                    <span className="flex items-center text-xs text-neutral-500">
-                      <MapPin className="w-3 h-3 mr-1" />
-                      {job.location}
-                    </span>
-                    <span className="text-xs text-neutral-500">{job.type}</span>
-                    <span className="text-xs font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-                      {job.tag}
-                    </span>
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+
+            {/* LEFT: Job Listings */}
+            <div className="space-y-3">
+              <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-4">Currently Hiring</p>
+              {jobListings.map((job) => (
+                <div
+                  key={job.id}
+                  onClick={() => setFormData(prev => ({ ...prev, job: job.title }))}
+                  className={"reveal cursor-pointer bg-white rounded-xl border p-4 hover:border-primary hover:shadow-md transition-all duration-200 group " + (formData.job === job.title ? "border-primary shadow-md" : "border-neutral-200")}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">{job.tag}</span>
+                        <span className="text-xs text-neutral-400 flex items-center gap-1"><Clock className="w-3 h-3" />{job.exp}</span>
+                      </div>
+                      <h4 className={"text-sm font-bold mb-1 transition-colors " + (formData.job === job.title ? "text-primary" : "text-neutral-900 group-hover:text-primary")}>{job.title}</h4>
+                      <p className="text-xs text-neutral-500 leading-relaxed line-clamp-2">{job.desc}</p>
+                      <div className="flex items-center gap-3 text-xs text-neutral-400 mt-2">
+                        <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{job.location}</span>
+                        <span className="flex items-center gap-1"><Briefcase className="w-3 h-3" />{job.type}</span>
+                      </div>
+                    </div>
+                    {formData.job === job.title && (
+                      <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1">
+                        <CheckCircle className="w-3 h-3 text-white" />
+                      </div>
+                    )}
                   </div>
                 </div>
-                <button
-                  onClick={() => openModal(job.title)}
-                  className="mt-2 w-full py-2.5 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2 group-hover:gap-3"
-                >
-                  Apply Now <ArrowRight className="w-4 h-4" />
+              ))}
+            </div>
+
+            {/* RIGHT: Application Form */}
+            <div className="reveal bg-white rounded-2xl border border-neutral-200 p-6 sm:p-8 shadow-sm sticky top-24">
+              <h3 className="text-lg font-bold text-neutral-900 mb-1">Apply for a Position</h3>
+              <p className="text-xs text-neutral-500 mb-5">Select a role on the left or choose from the dropdown below.</p>
+              <form onSubmit={handleSubmit} className="space-y-4">
+
+                {/* Position */}
+                <div>
+                  <label className="block text-xs font-medium text-neutral-700 mb-1.5">Position</label>
+                  <select name="job" value={formData.job} onChange={handleInputChange} required className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm">
+                    <option value="">Select a position</option>
+                    {jobListings.map(j => (
+                      <option key={j.id} value={j.title}>{j.title}</option>
+                    ))}
+                    <option value="Open Application">Open Application (future roles)</option>
+                  </select>
+                </div>
+
+                {/* Name */}
+                <div>
+                  <label className="block text-xs font-medium text-neutral-700 mb-1.5"><User className="w-3 h-3 inline mr-1" />Full Name</label>
+                  <input type="text" name="name" value={formData.name} onChange={handleInputChange} required className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="John Doe" />
+                </div>
+
+                {/* Email + Phone */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Mail className="w-3 h-3 inline mr-1" />Email</label>
+                    <input type="email" name="email" value={formData.email} onChange={handleInputChange} required className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="john@example.com" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Phone className="w-3 h-3 inline mr-1" />Phone</label>
+                    <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="+91 98765 43210" />
+                  </div>
+                </div>
+
+                {/* Experience + Notice Period */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Clock className="w-3 h-3 inline mr-1" />Years of Experience</label>
+                    <input type="number" name="experience" value={formData.experience} onChange={handleInputChange} required min="0" max="40" className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="e.g. 3" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Clock className="w-3 h-3 inline mr-1" />Notice Period</label>
+                    <select name="notice" value={formData.notice} onChange={handleInputChange} required className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm">
+                      <option value="">Select</option>
+                      <option value="Immediate">Immediate</option>
+                      <option value="15 days">15 days</option>
+                      <option value="30 days">30 days</option>
+                      <option value="60 days">60 days</option>
+                      <option value="90 days">90 days</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Current Company */}
+                <div>
+                  <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Briefcase className="w-3 h-3 inline mr-1" />Current / Last Company</label>
+                  <input type="text" name="company" value={formData.company} onChange={handleInputChange} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="Company name (optional)" />
+                </div>
+
+                {/* Specialization */}
+                <div>
+                  <label className="block text-xs font-medium text-neutral-700 mb-2">Specialization (select all that apply)</label>
+                  <div className="flex flex-wrap gap-2">
+                    {['Embedded Systems', 'Power Electronics', 'PCB Design', 'Firmware', 'IoT'].map(spec => (
+                      <button
+                        key={spec}
+                        type="button"
+                        onClick={() => {
+                          const current = formData.specialization || [];
+                          const updated = current.includes(spec) ? current.filter((s: string) => s !== spec) : [...current, spec];
+                          setFormData(prev => ({ ...prev, specialization: updated }));
+                        }}
+                        className={"text-xs px-3 py-1.5 rounded-full border transition-all " + ((formData.specialization || []).includes(spec) ? "bg-primary text-white border-primary" : "bg-white text-neutral-600 border-neutral-300 hover:border-primary hover:text-primary")}
+                      >
+                        {spec}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* LinkedIn + GitHub */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Linkedin className="w-3 h-3 inline mr-1" />LinkedIn URL</label>
+                    <input type="url" name="linkedin" value={formData.linkedin} onChange={handleInputChange} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="linkedin.com/in/..." />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Globe className="w-3 h-3 inline mr-1" />GitHub / Portfolio</label>
+                    <input type="url" name="portfolio" value={formData.portfolio} onChange={handleInputChange} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="github.com/..." />
+                  </div>
+                </div>
+
+                {/* Cover Note */}
+                <div>
+                  <label className="block text-xs font-medium text-neutral-700 mb-1.5">Cover Note</label>
+                  <textarea name="cover" value={formData.cover} onChange={(e) => setFormData(prev => ({ ...prev, cover: e.target.value }))} rows={3} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm resize-none" placeholder="Why do you want to join INPET? (2-3 lines)" />
+                </div>
+
+                {/* Resume Upload */}
+                <div>
+                  <label className="block text-xs font-medium text-neutral-700 mb-1.5"><FileUp className="w-3 h-3 inline mr-1" />Resume (PDF)</label>
+                  <input type="file" accept=".pdf" onChange={handleFileChange} required className="hidden" id="resume-upload" />
+                  <label htmlFor="resume-upload" className="flex items-center justify-center w-full px-3 py-4 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
+                    <div className="text-center">
+                      <Upload className="w-5 h-5 text-neutral-400 mx-auto mb-1" />
+                      <p className="text-xs text-neutral-600">{fileName || "Click to upload PDF"}</p>
+                    </div>
+                  </label>
+                </div>
+
+                <button type="submit" className="w-full btn-primary group">
+                  Submit Application
+                  <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </button>
-              </div>
-            ))}
+                <p className="text-xs text-neutral-400 text-center">We review all applications and reach out for suitable opportunities.</p>
+              </form>
+            </div>
+
           </div>
         </div>
       </section>
@@ -503,7 +630,7 @@ function SubmitResumeSection() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5">
                     <Mail className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" />
@@ -577,6 +704,83 @@ function SubmitResumeSection() {
   );
 }
 
+// Sign In Dropdown Component
+function SignInDropdown({ mobile = false, onClose }: { mobile?: boolean; onClose?: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+
+  const validate = () => {
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed) { setError('Please enter your email.'); return; }
+    if (!trimmed.endsWith('@inpet.in')) { setError('Only @inpet.in email addresses are allowed.'); return; }
+    setError('');
+    const webmailUrl = 'https://www.inpet.in/webmail/?_user=' + encodeURIComponent(trimmed);
+    window.open(webmailUrl, '_blank');
+    setOpen(false);
+    setEmail('');
+    if (onClose) onClose();
+  };
+
+  const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') validate();
+    if (e.key === 'Escape') { setOpen(false); setError(''); }
+  };
+
+  if (mobile) {
+    return (
+      <div className="mt-4 px-4 pb-4">
+        <p className="text-xs text-neutral-500 mb-1.5">Enter your @inpet.in email to sign in</p>
+        <div className="flex gap-2">
+          <input
+            type="email"
+            value={email}
+            onChange={e => { setEmail(e.target.value); setError(''); }}
+            onKeyDown={handleKey}
+            placeholder="you@inpet.in"
+            className="flex-1 px-3 py-2 border border-neutral-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary"
+          />
+          <button onClick={validate} className="btn-primary px-4 py-2 text-sm">Go</button>
+        </div>
+        {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => { setOpen(o => !o); setError(''); }}
+        className="text-sm px-3 py-1.5 flex items-center gap-1 bg-primary border border-primary/50 text-white rounded-lg hover:bg-red-700 transition-colors"
+      >
+        Sign In
+        <svg className={'w-4 h-4 transition-transform ' + (open ? 'rotate-180' : '')} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-neutral-200 p-4 z-50">
+          <p className="text-sm font-medium text-neutral-900 mb-1">Sign in to Webmail</p>
+          <p className="text-xs text-neutral-500 mb-3">Only @inpet.in email addresses are allowed.</p>
+          <input
+            type="email"
+            value={email}
+            onChange={e => { setEmail(e.target.value); setError(''); }}
+            onKeyDown={handleKey}
+            placeholder="yourname@inpet.in"
+            className="w-full px-3 py-2.5 border border-neutral-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary mb-2"
+            autoFocus
+          />
+          {error && <p className="text-xs text-red-500 mb-2">{error}</p>}
+          <button onClick={validate} className="w-full py-2.5 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors">
+            Continue to Webmail
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -638,7 +842,7 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-hidden">
       {/* Navigation */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -658,9 +862,9 @@ function App() {
               >
                 <img src={logo} alt="INPET Logo" className="w-11 h-11 object-contain" />
               </div>
-              <div className="flex flex-col">
-                <span className="text-2xl font-bold text-primary leading-tight" style={{fontFamily: 'Ethnocentric, sans-serif'}}>INPET</span>
-                <span className={`text-xs font-semibold tracking-wide leading-tight ${isScrolled ? 'text-neutral-900' : 'text-white'}`} style={{fontFamily: 'Ethnocentric, sans-serif'}}>Innovative Power and<br/>Embedded Technology</span>
+              <div className="flex flex-col justify-end" style={{minWidth: 'auto'}}>
+                <span className="text-2xl sm:text-4xl font-black text-primary leading-tight" style={{fontFamily: 'Ethnocentric, sans-serif', letterSpacing: '0.85em', width: 'auto', display: 'block', fontWeight: '900', WebkitTextStroke: '1px #cc0000'}}>INPET</span>
+                <span className={isScrolled ? 'text-neutral-600' : 'text-white'} style={{fontFamily: 'Arial, sans-serif', fontSize: '9px', fontWeight: '400', letterSpacing: '0.05em', lineHeight: '1.2'}}>An Innovative Power and Embedded Technology Company</span>
               </div>
             </a>
 
@@ -677,9 +881,7 @@ function App() {
                   {link.name}
                 </a>
               ))}
-              <a href="https://www.inpet.in/webmail" target="_blank" rel="noopener noreferrer" className="btn-primary text-base px-6 py-2.5 self-center">
-                Sign In
-              </a>
+              <SignInDropdown />
             </div>
 
             {/* Mobile Menu Button */}
@@ -711,15 +913,7 @@ function App() {
                   {link.name}
                 </a>
               ))}
-              <a
-                href="https://www.inpet.in/webmail"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsMenuOpen(false)}
-                className="block py-3 px-4 btn-primary text-center mt-4"
-              >
-                Sign In
-              </a>
+              <SignInDropdown mobile onClose={() => setIsMenuOpen(false)} />
             </div>
           </div>
         )}
@@ -772,7 +966,7 @@ function App() {
             </div>
 
             {/* Image Grid */}
-            <div className="reveal stagger-2 grid grid-cols-2 gap-3 sm:gap-4">
+            <div className="reveal stagger-2 grid grid-cols-2 gap-2 sm:gap-4 max-w-lg mx-auto lg:max-w-none">
               <div className="space-y-3 sm:space-y-4">
                 <div className="rounded-xl sm:rounded-2xl overflow-hidden shadow-lg aspect-[4/3]">
                   <img
@@ -825,7 +1019,7 @@ function App() {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {/* Defense */}
             <div className="reveal stagger-1 group bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-neutral-200 hover:border-primary">
               <div className="w-12 h-12 sm:w-16 sm:h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-primary group-hover:scale-110 transition-all">
@@ -908,7 +1102,7 @@ function App() {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Service Cards */}
             {[
               {
@@ -987,7 +1181,7 @@ function App() {
                 Our team brings deep expertise across the full spectrum of power electronics and embedded technologies.
               </p>
 
-              <div className="reveal stagger-3 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+              <div className="reveal stagger-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
                 {[
                   { icon: Chip, label: 'STM32' },
                   { icon: CircuitBoard, label: 'MSPM0' },
@@ -1046,7 +1240,7 @@ function App() {
             </p>
           </div>
 
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {categoriesData.map((cat, index) => (
               <CategoryCard
                 key={cat.category}
@@ -1065,7 +1259,7 @@ function App() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Image */}
             <div className="reveal order-2 lg:order-1">
-              <div className="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-2xl">
+              <div className="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-2xl max-h-64 sm:max-h-80 lg:max-h-none">
                 <img
                   src="https://images.pexels.com/photo-3182811/pexels-photo-3182811.jpeg?auto=compress&cs=tinysrgb&w=800"
                   alt="Team collaboration"
@@ -1291,17 +1485,17 @@ function App() {
       {/* Footer */}
       <footer className="bg-neutral-900 text-white pt-10 sm:pt-12 lg:pt-16 pb-6 sm:pb-8">
         <div className="container-custom">
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12 mb-8 sm:mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12 mb-8 sm:mb-12">
             {/* Company Info */}
             <div className="col-span-2 lg:col-span-1">
               <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
                 <div className="w-14 h-14 bg-white rounded-lg flex items-center justify-center">
                   <img src={logo} alt="INPET Logo" className="w-11 h-11 object-contain" />
                 </div>
-                <span className="text-xl sm:text-2xl font-bold text-primary" style={{fontFamily: 'Ethnocentric, sans-serif'}}>INPET</span>
+                <span className="text-xl sm:text-4xl font-black text-primary" style={{fontFamily: 'Ethnocentric, sans-serif', letterSpacing: '0.85em', width: 'auto', display: 'block', fontWeight: '900', WebkitTextStroke: '1px #cc0000'}}>INPET</span>
               </div>
               <p className="text-neutral-400 text-xs sm:text-sm mb-4 sm:mb-6">
-                Innovative Power and Embedded Technology company delivering cutting-edge solutions for critical industries worldwide.
+                An Innovative Power and Embedded Technology Company company delivering cutting-edge solutions for critical industries worldwide.
               </p>
               <div className="flex space-x-3 sm:space-x-4">
                 <a href="#" className="w-8 h-8 sm:w-9 sm:h-9 bg-white/10 rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
