@@ -41,6 +41,7 @@ import {
   Wrench,
 } from 'lucide-react';
 import logo from './assets/INPET Logo- 2.png';
+import logoInverted from './assets/inverted logo inpet.png';
 
 // Hero slideshow slides data
 const heroSlides = [
@@ -359,24 +360,22 @@ const jobListings = [
 
 function SubmitResumeSection() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedJob, setSelectedJob] = useState('');
-  const [formData, setFormData] = useState({ name: '', email: '', phone: '', job: '', experience: '', notice: '', company: '', specialization: [] as string[], linkedin: '', portfolio: '', cover: '', resume: null as File | null });
+  const [formData, setFormData] = useState({
+    name: '', email: '', phone: '', job: '', experience: '',
+    notice: '', company: '', specialization: [] as string[],
+    linkedin: '', portfolio: '', cover: '', resume: null as File | null
+  });
   const [fileName, setFileName] = useState('');
 
-  const openModal = (jobTitle: string) => {
-    setSelectedJob(jobTitle);
-    setFormData(prev => ({ ...prev, job: jobTitle }));
-    setModalOpen(true);
-  };
+  const openModal = () => setModalOpen(true);
 
   const closeModal = () => {
     setModalOpen(false);
-    setSelectedJob('');
     setFormData({ name: '', email: '', phone: '', job: '', experience: '', notice: '', company: '', specialization: [], linkedin: '', portfolio: '', cover: '', resume: null });
     setFileName('');
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -402,8 +401,10 @@ function SubmitResumeSection() {
     <>
       <section id="careers" className="py-10 sm:py-16 bg-neutral-50">
         <div className="container-custom">
-          <div className="text-center mb-8 sm:mb-12">
-            <span className="reveal text-primary font-semibold text-xs sm:text-sm tracking-wider uppercase mb-3 sm:mb-4 block">
+
+          {/* Header */}
+          <div className="text-center mb-8 sm:mb-10">
+            <span className="reveal text-primary font-semibold text-xs sm:text-sm tracking-wider uppercase mb-3 block">
               Careers
             </span>
             <h2 className="reveal stagger-1 text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-neutral-900 mb-2">
@@ -414,161 +415,36 @@ function SubmitResumeSection() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-
-            {/* LEFT: Job Listings */}
-            <div className="space-y-3">
-              <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-4">Currently Hiring</p>
-              {jobListings.map((job) => (
-                <div
-                  key={job.id}
-                  onClick={() => setFormData(prev => ({ ...prev, job: job.title }))}
-                  className={"reveal cursor-pointer bg-white rounded-xl border p-4 hover:border-primary hover:shadow-md transition-all duration-200 group " + (formData.job === job.title ? "border-primary shadow-md" : "border-neutral-200")}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">{job.tag}</span>
-                        <span className="text-xs text-neutral-400 flex items-center gap-1"><Clock className="w-3 h-3" />{job.exp}</span>
-                      </div>
-                      <h4 className={"text-sm font-bold mb-1 transition-colors " + (formData.job === job.title ? "text-primary" : "text-neutral-900 group-hover:text-primary")}>{job.title}</h4>
-                      <p className="text-xs text-neutral-500 leading-relaxed line-clamp-2">{job.desc}</p>
-                      <div className="flex items-center gap-3 text-xs text-neutral-400 mt-2">
-                        <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{job.location}</span>
-                        <span className="flex items-center gap-1"><Briefcase className="w-3 h-3" />{job.type}</span>
-                      </div>
-                    </div>
-                    {formData.job === job.title && (
-                      <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1">
-                        <CheckCircle className="w-3 h-3 text-white" />
-                      </div>
-                    )}
-                  </div>
+          {/* Horizontal scrollable job cards */}
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+            {jobListings.map((job) => (
+              <div
+                key={job.id}
+                className="reveal flex-shrink-0 w-64 sm:w-72 bg-white rounded-xl border border-neutral-200 p-5 hover:border-primary hover:shadow-md transition-all duration-200 snap-start"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-semibold bg-primary/10 text-primary px-2.5 py-1 rounded-full">{job.tag}</span>
+                  <span className="text-xs text-neutral-400 flex items-center gap-1"><Clock className="w-3 h-3" />{job.exp}</span>
                 </div>
-              ))}
-            </div>
-
-            {/* RIGHT: Application Form */}
-            <div className="reveal bg-white rounded-2xl border border-neutral-200 p-6 sm:p-8 shadow-sm sticky top-24">
-              <h3 className="text-lg font-bold text-neutral-900 mb-1">Apply for a Position</h3>
-              <p className="text-xs text-neutral-500 mb-5">Select a role on the left or choose from the dropdown below.</p>
-              <form onSubmit={handleSubmit} className="space-y-4">
-
-                {/* Position */}
-                <div>
-                  <label className="block text-xs font-medium text-neutral-700 mb-1.5">Position</label>
-                  <select name="job" value={formData.job} onChange={handleInputChange} required className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm">
-                    <option value="">Select a position</option>
-                    {jobListings.map(j => (
-                      <option key={j.id} value={j.title}>{j.title}</option>
-                    ))}
-                    <option value="Open Application">Open Application (future roles)</option>
-                  </select>
+                <h4 className="text-sm font-bold text-neutral-900 mb-2">{job.title}</h4>
+                <p className="text-xs text-neutral-500 leading-relaxed mb-4 line-clamp-3">{job.desc}</p>
+                <div className="flex items-center gap-3 text-xs text-neutral-400">
+                  <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{job.location}</span>
+                  <span className="flex items-center gap-1"><Briefcase className="w-3 h-3" />{job.type}</span>
                 </div>
-
-                {/* Name */}
-                <div>
-                  <label className="block text-xs font-medium text-neutral-700 mb-1.5"><User className="w-3 h-3 inline mr-1" />Full Name</label>
-                  <input type="text" name="name" value={formData.name} onChange={handleInputChange} required className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="John Doe" />
-                </div>
-
-                {/* Email + Phone */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Mail className="w-3 h-3 inline mr-1" />Email</label>
-                    <input type="email" name="email" value={formData.email} onChange={handleInputChange} required className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="john@example.com" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Phone className="w-3 h-3 inline mr-1" />Phone</label>
-                    <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="+91 98765 43210" />
-                  </div>
-                </div>
-
-                {/* Experience + Notice Period */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Clock className="w-3 h-3 inline mr-1" />Years of Experience</label>
-                    <input type="number" name="experience" value={formData.experience} onChange={handleInputChange} required min="0" max="40" className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="e.g. 3" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Clock className="w-3 h-3 inline mr-1" />Notice Period</label>
-                    <select name="notice" value={formData.notice} onChange={handleInputChange} required className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm">
-                      <option value="">Select</option>
-                      <option value="Immediate">Immediate</option>
-                      <option value="15 days">15 days</option>
-                      <option value="30 days">30 days</option>
-                      <option value="60 days">60 days</option>
-                      <option value="90 days">90 days</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Current Company */}
-                <div>
-                  <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Briefcase className="w-3 h-3 inline mr-1" />Current / Last Company</label>
-                  <input type="text" name="company" value={formData.company} onChange={handleInputChange} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="Company name (optional)" />
-                </div>
-
-                {/* Specialization */}
-                <div>
-                  <label className="block text-xs font-medium text-neutral-700 mb-2">Specialization (select all that apply)</label>
-                  <div className="flex flex-wrap gap-2">
-                    {['Embedded Systems', 'Power Electronics', 'PCB Design', 'Firmware', 'IoT'].map(spec => (
-                      <button
-                        key={spec}
-                        type="button"
-                        onClick={() => {
-                          const current = formData.specialization || [];
-                          const updated = current.includes(spec) ? current.filter((s: string) => s !== spec) : [...current, spec];
-                          setFormData(prev => ({ ...prev, specialization: updated }));
-                        }}
-                        className={"text-xs px-3 py-1.5 rounded-full border transition-all " + ((formData.specialization || []).includes(spec) ? "bg-primary text-white border-primary" : "bg-white text-neutral-600 border-neutral-300 hover:border-primary hover:text-primary")}
-                      >
-                        {spec}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* LinkedIn + GitHub */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Linkedin className="w-3 h-3 inline mr-1" />LinkedIn URL</label>
-                    <input type="url" name="linkedin" value={formData.linkedin} onChange={handleInputChange} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="linkedin.com/in/..." />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-neutral-700 mb-1.5"><Globe className="w-3 h-3 inline mr-1" />GitHub / Portfolio</label>
-                    <input type="url" name="portfolio" value={formData.portfolio} onChange={handleInputChange} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="github.com/..." />
-                  </div>
-                </div>
-
-                {/* Cover Note */}
-                <div>
-                  <label className="block text-xs font-medium text-neutral-700 mb-1.5">Cover Note</label>
-                  <textarea name="cover" value={formData.cover} onChange={(e) => setFormData(prev => ({ ...prev, cover: e.target.value }))} rows={3} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm resize-none" placeholder="Why do you want to join INPET? (2-3 lines)" />
-                </div>
-
-                {/* Resume Upload */}
-                <div>
-                  <label className="block text-xs font-medium text-neutral-700 mb-1.5"><FileUp className="w-3 h-3 inline mr-1" />Resume (PDF)</label>
-                  <input type="file" accept=".pdf" onChange={handleFileChange} required className="hidden" id="resume-upload" />
-                  <label htmlFor="resume-upload" className="flex items-center justify-center w-full px-3 py-4 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
-                    <div className="text-center">
-                      <Upload className="w-5 h-5 text-neutral-400 mx-auto mb-1" />
-                      <p className="text-xs text-neutral-600">{fileName || "Click to upload PDF"}</p>
-                    </div>
-                  </label>
-                </div>
-
-                <button type="submit" className="w-full btn-primary group">
-                  Submit Application
-                  <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </button>
-                <p className="text-xs text-neutral-400 text-center">We review all applications and reach out for suitable opportunities.</p>
-              </form>
-            </div>
-
+              </div>
+            ))}
           </div>
+
+          {/* Single Apply Button */}
+          <div className="text-center mt-8">
+            <button onClick={openModal} className="btn-primary group">
+              Apply Now
+              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+            </button>
+            <p className="text-xs text-neutral-400 mt-3">Submit your application and we'll match you to the right role.</p>
+          </div>
+
         </div>
       </section>
 
@@ -579,123 +455,150 @@ function SubmitResumeSection() {
           onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
         >
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-5 sm:p-6 border-b border-neutral-200">
+            <div className="flex items-center justify-between p-5 border-b border-neutral-200">
               <div>
-                <h3 className="text-lg sm:text-xl font-bold text-neutral-900">Apply for Position</h3>
-                <p className="text-xs text-neutral-500 mt-0.5">{selectedJob}</p>
+                <h3 className="text-lg font-bold text-neutral-900">Apply for a Position</h3>
+                <p className="text-xs text-neutral-500 mt-0.5">Fill in what you can — only name and email are required.</p>
               </div>
-              <button
-                onClick={closeModal}
-                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-neutral-100 transition-colors text-neutral-500 hover:text-neutral-900"
-              >
+              <button onClick={closeModal} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-neutral-100 transition-colors text-neutral-500">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Modal Form */}
-            <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
-              {/* Job dropdown */}
+            <form onSubmit={handleSubmit} className="p-5 space-y-4">
+
+              {/* Position */}
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5">
-                  Position
-                </label>
-                <select
-                  name="job"
-                  value={formData.job}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 sm:px-4 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
-                >
+                <label className="block text-xs font-medium text-neutral-700 mb-1.5">Position</label>
+                <select name="job" value={formData.job} onChange={handleInputChange} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm">
                   <option value="">Select a position</option>
                   {jobListings.map(j => (
                     <option key={j.id} value={j.title}>{j.title}</option>
                   ))}
+                  <option value="Open Application">Open Application (future roles)</option>
                 </select>
               </div>
 
+              {/* Name — required */}
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5">
-                  <User className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" />
-                  Full Name
+                <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+                  <User className="w-3 h-3 inline mr-1" />Full Name <span className="text-primary">*</span>
                 </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 sm:px-4 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
-                  placeholder="John Doe"
-                />
+                <input type="text" name="name" value={formData.name} onChange={handleInputChange} required className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="John Doe" />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Email + Phone */}
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5">
-                    <Mail className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" />
-                    Email
+                  <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+                    <Mail className="w-3 h-3 inline mr-1" />Email <span className="text-primary">*</span>
                   </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
-                    placeholder="john@example.com"
-                  />
+                  <input type="email" name="email" value={formData.email} onChange={handleInputChange} required className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="john@example.com" />
                 </div>
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5">
-                    <Phone className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" />
-                    Phone
+                  <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+                    <Phone className="w-3 h-3 inline mr-1" />Phone
                   </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
-                    placeholder="+91 98765 43210"
-                  />
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="+91 98765 43210" />
                 </div>
               </div>
 
+              {/* Experience + Notice */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+                    <Clock className="w-3 h-3 inline mr-1" />Years of Experience
+                  </label>
+                  <input type="number" name="experience" value={formData.experience} onChange={handleInputChange} min="0" max="40" className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="e.g. 3" />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+                    <Clock className="w-3 h-3 inline mr-1" />Notice Period
+                  </label>
+                  <select name="notice" value={formData.notice} onChange={handleInputChange} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm">
+                    <option value="">Select</option>
+                    <option value="Immediate">Immediate</option>
+                    <option value="15 days">15 days</option>
+                    <option value="30 days">30 days</option>
+                    <option value="60 days">60 days</option>
+                    <option value="90 days">90 days</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Current Company */}
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-neutral-700 mb-1.5">
-                  <FileUp className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1.5" />
-                  Resume (PDF)
+                <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+                  <Briefcase className="w-3 h-3 inline mr-1" />Current / Last Company
                 </label>
-                <input type="file" accept=".pdf" onChange={handleFileChange} required className="hidden" id="modal-resume-upload" />
-                <label
-                  htmlFor="modal-resume-upload"
-                  className="flex items-center justify-center w-full px-4 py-4 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors"
-                >
+                <input type="text" name="company" value={formData.company} onChange={handleInputChange} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="Company name (optional)" />
+              </div>
+
+              {/* Specialization */}
+              <div>
+                <label className="block text-xs font-medium text-neutral-700 mb-2">Specialization</label>
+                <div className="flex flex-wrap gap-2">
+                  {['Embedded Systems', 'Power Electronics', 'PCB Design', 'Firmware', 'IoT'].map(spec => (
+                    <button
+                      key={spec}
+                      type="button"
+                      onClick={() => {
+                        const current = formData.specialization || [];
+                        const updated = current.includes(spec) ? current.filter((s: string) => s !== spec) : [...current, spec];
+                        setFormData(prev => ({ ...prev, specialization: updated }));
+                      }}
+                      className={"text-xs px-3 py-1.5 rounded-full border transition-all " + ((formData.specialization || []).includes(spec) ? "bg-primary text-white border-primary" : "bg-white text-neutral-600 border-neutral-300 hover:border-primary hover:text-primary")}
+                    >
+                      {spec}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* LinkedIn + Portfolio */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+                    <Linkedin className="w-3 h-3 inline mr-1" />LinkedIn
+                  </label>
+                  <input type="url" name="linkedin" value={formData.linkedin} onChange={handleInputChange} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="linkedin.com/in/..." />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+                    <Globe className="w-3 h-3 inline mr-1" />GitHub / Portfolio
+                  </label>
+                  <input type="url" name="portfolio" value={formData.portfolio} onChange={handleInputChange} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm" placeholder="github.com/..." />
+                </div>
+              </div>
+
+              {/* Cover Note */}
+              <div>
+                <label className="block text-xs font-medium text-neutral-700 mb-1.5">Cover Note</label>
+                <textarea name="cover" value={formData.cover} onChange={handleInputChange} rows={3} className="w-full px-3 py-2.5 bg-white border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm resize-none" placeholder="Why do you want to join INPET? (optional)" />
+              </div>
+
+              {/* Resume */}
+              <div>
+                <label className="block text-xs font-medium text-neutral-700 mb-1.5">
+                  <FileUp className="w-3 h-3 inline mr-1" />Resume (PDF)
+                </label>
+                <input type="file" accept=".pdf" onChange={handleFileChange} className="hidden" id="resume-upload" />
+                <label htmlFor="resume-upload" className="flex items-center justify-center w-full px-3 py-4 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
                   <div className="text-center">
-                    <Upload className="w-6 h-6 text-neutral-400 mx-auto mb-1" />
-                    <p className="text-xs text-neutral-600">{fileName || 'Click to upload or drag and drop'}</p>
-                    <p className="text-xs text-neutral-400 mt-0.5">PDF only (max 5MB)</p>
+                    <Upload className="w-5 h-5 text-neutral-400 mx-auto mb-1" />
+                    <p className="text-xs text-neutral-600">{fileName || "Click to upload PDF (optional)"}</p>
                   </div>
                 </label>
               </div>
 
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="flex-1 py-2.5 border border-neutral-300 text-neutral-700 text-sm font-medium rounded-lg hover:bg-neutral-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 py-2.5 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
-                >
-                  Submit Application <Send className="w-4 h-4" />
-                </button>
-              </div>
+              <button type="submit" className="w-full btn-primary group">
+                Submit Application
+                <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <p className="text-xs text-neutral-400 text-center">Only name and email are required. We'll reach out when there's a match.</p>
             </form>
           </div>
         </div>
@@ -704,77 +607,85 @@ function SubmitResumeSection() {
   );
 }
 
+
 // Sign In Dropdown Component
-function SignInDropdown({ mobile = false, onClose }: { mobile?: boolean; onClose?: () => void }) {
+function SignInDropdown({ mobile = false, onClose, isScrolled = false }: { mobile?: boolean; onClose?: () => void; isScrolled?: boolean }) {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const ref = useRef<HTMLDivElement>(null);
 
-  const validate = () => {
-    const trimmed = email.trim().toLowerCase();
-    if (!trimmed) { setError('Please enter your email.'); return; }
-    if (!trimmed.endsWith('@inpet.in')) { setError('Only @inpet.in email addresses are allowed.'); return; }
-    setError('');
-    const webmailUrl = 'https://www.inpet.in/webmail/?_user=' + encodeURIComponent(trimmed);
-    window.open(webmailUrl, '_blank');
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+        setError('');
+        setEmail('');
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSignIn = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.endsWith('@inpet.in')) {
+      setError('Access restricted to INPET team members only.');
+      return;
+    }
+    window.open('https://www.inpet.in/webmail', '_blank');
     setOpen(false);
     setEmail('');
+    setError('');
     if (onClose) onClose();
-  };
-
-  const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') validate();
-    if (e.key === 'Escape') { setOpen(false); setError(''); }
   };
 
   if (mobile) {
     return (
-      <div className="mt-4 px-4 pb-4">
-        <p className="text-xs text-neutral-500 mb-1.5">Enter your @inpet.in email to sign in</p>
-        <div className="flex gap-2">
+      <div className="mt-2 px-4 pb-2">
+        <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Team Access Only</p>
+        <form onSubmit={handleSignIn} className="space-y-2">
           <input
             type="email"
             value={email}
-            onChange={e => { setEmail(e.target.value); setError(''); }}
-            onKeyDown={handleKey}
-            placeholder="you@inpet.in"
-            className="flex-1 px-3 py-2 border border-neutral-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary"
+            onChange={(e) => { setEmail(e.target.value); setError(''); }}
+            placeholder="Enter your team email"
+            className="w-full px-3 py-2.5 border border-neutral-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary"
           />
-          <button onClick={validate} className="btn-primary px-4 py-2 text-sm">Go</button>
-        </div>
-        {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+          {error && <p className="text-xs text-red-500">{error}</p>}
+          <button type="submit" className="w-full btn-primary py-2.5 text-sm">Sign In</button>
+        </form>
       </div>
     );
   }
 
   return (
-    <div className="relative">
+    <div className="relative" ref={ref}>
       <button
-        onClick={() => { setOpen(o => !o); setError(''); }}
-        className="text-sm px-3 py-1.5 flex items-center gap-1 bg-primary border border-primary/50 text-white rounded-lg hover:bg-red-700 transition-colors"
+        onClick={() => { setOpen(!open); setError(''); setEmail(''); }}
+        className={`text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors ${isScrolled ? "text-neutral-700" : "text-white/90"}`}
       >
         Sign In
-        <svg className={'w-4 h-4 transition-transform ' + (open ? 'rotate-180' : '')} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <ChevronRight className={"w-4 h-4 transition-transform " + (open ? "rotate-90" : "")} />
       </button>
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-neutral-200 p-4 z-50">
-          <p className="text-sm font-medium text-neutral-900 mb-1">Sign in to Webmail</p>
-          <p className="text-xs text-neutral-500 mb-3">Only @inpet.in email addresses are allowed.</p>
-          <input
-            type="email"
-            value={email}
-            onChange={e => { setEmail(e.target.value); setError(''); }}
-            onKeyDown={handleKey}
-            placeholder="yourname@inpet.in"
-            className="w-full px-3 py-2.5 border border-neutral-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary mb-2"
-            autoFocus
-          />
-          {error && <p className="text-xs text-red-500 mb-2">{error}</p>}
-          <button onClick={validate} className="w-full py-2.5 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors">
-            Continue to Webmail
-          </button>
+        <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-xl border border-neutral-200 p-4 z-50">
+          <form onSubmit={handleSignIn} className="space-y-3">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => { setEmail(e.target.value); setError(''); }}
+              placeholder="Enter your email"
+              className="w-full px-3 py-2.5 border border-neutral-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary"
+              autoFocus
+            />
+            {error && (
+              <p className="text-xs text-red-500 flex items-center gap-1">
+                <X className="w-3 h-3" />You are not authorised
+              </p>
+            )}
+            <button type="submit" className="w-full btn-primary py-2.5 text-sm">Sign In</button>
+          </form>
         </div>
       )}
     </div>
@@ -850,21 +761,13 @@ function App() {
         }`}
       >
         <div className="container-custom">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-14">
             {/* Logo */}
-            <a href="#home" className="flex items-center space-x-3">
-              <div
-                className={`w-14 h-14 rounded-lg flex items-center justify-center transition-all duration-300 ${
-                  isScrolled
-                    ? 'bg-white'
-                    : 'bg-white'
-                }`}
-              >
-                <img src={logo} alt="INPET Logo" className="w-11 h-11 object-contain" />
-              </div>
+            <a href="#home" className="flex items-center space-x-1">
+              <img src={isScrolled ? logo : logoInverted} alt="INPET Logo" className="w-12 h-12 object-contain transition-all duration-500 ease-in-out" />
               <div className="flex flex-col justify-end" style={{minWidth: 'auto'}}>
-                <span className="text-2xl sm:text-4xl font-black text-primary leading-tight" style={{fontFamily: 'Ethnocentric, sans-serif', letterSpacing: '0.85em', width: 'auto', display: 'block', fontWeight: '900', WebkitTextStroke: '1px #cc0000'}}>INPET</span>
-                <span className={isScrolled ? 'text-neutral-600' : 'text-white'} style={{fontFamily: 'Arial, sans-serif', fontSize: '9px', fontWeight: '400', letterSpacing: '0.05em', lineHeight: '1.2'}}>An Innovative Power and Embedded Technology Company</span>
+                <span className="text-3xl sm:text-4xl font-black text-primary leading-tight" style={{fontFamily: 'Ethnocentric, sans-serif', letterSpacing: '0.1em', display: 'block', fontWeight: '900', WebkitTextStroke: '1px #cc0000'}}>INPET</span>
+                <span className={isScrolled ? 'text-neutral-600' : 'text-white'} style={{fontFamily: 'Arial, sans-serif', fontSize: '7px', fontWeight: '400', letterSpacing: '0.03em', lineHeight: '1.2'}}>Innovative Power and Embedded Technology</span>
               </div>
             </a>
 
@@ -881,7 +784,7 @@ function App() {
                   {link.name}
                 </a>
               ))}
-              <SignInDropdown />
+              <SignInDropdown isScrolled={isScrolled} />
             </div>
 
             {/* Mobile Menu Button */}
@@ -1490,7 +1393,7 @@ function App() {
             <div className="col-span-2 lg:col-span-1">
               <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
                 <div className="w-14 h-14 bg-white rounded-lg flex items-center justify-center">
-                  <img src={logo} alt="INPET Logo" className="w-11 h-11 object-contain" />
+                  <img src={isScrolled ? logo : logoInverted} alt="INPET Logo" className="w-12 h-12 object-contain transition-all duration-500 ease-in-out" />
                 </div>
                 <span className="text-xl sm:text-4xl font-black text-primary" style={{fontFamily: 'Ethnocentric, sans-serif', letterSpacing: '0.85em', width: 'auto', display: 'block', fontWeight: '900', WebkitTextStroke: '1px #cc0000'}}>INPET</span>
               </div>
