@@ -31,8 +31,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        heading: ['Poppins', 'system-ui', 'sans-serif'],
+        sans: ['Century Gothic', 'CenturyGothic', 'AppleGothic', 'Futura', 'sans-serif'],
+        heading: ['Century Gothic', 'CenturyGothic', 'AppleGothic', 'Futura', 'sans-serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-out forwards',

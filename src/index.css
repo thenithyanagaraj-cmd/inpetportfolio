@@ -20,11 +20,13 @@
   }
 
   body {
-    @apply font-sans antialiased text-neutral-800 overflow-x-hidden;
+    font-family: 'Century Gothic', 'CenturyGothic', 'AppleGothic', Futura, sans-serif;
+    @apply antialiased text-neutral-800 overflow-x-hidden tracking-wide;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading font-semibold tracking-tight;
+    font-family: 'Century Gothic', 'CenturyGothic', 'AppleGothic', Futura, sans-serif;
+    @apply font-semibold tracking-wider;
   }
 
   /* Responsive text sizing */

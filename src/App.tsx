@@ -134,6 +134,40 @@ const categoriesData = [
 ];
 
 // Hero Slideshow Component
+
+const boardMembers = [
+  { name: 'Rajesh Kumar', designation: 'Chairman & Managing Director', image: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=800', quote: '"Innovation is at the heart of everything we do. We are committed to engineering solutions that shape the future."' },
+  { name: 'Priya Sharma', designation: 'Chief Executive Officer', image: 'https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=800', quote: '"Our team drives excellence through collaboration, precision, and a passion for technology."' },
+  { name: 'Anil Mehta', designation: 'Chief Technology Officer', image: 'https://images.pexels.com/photos/3778603/pexels-photo-3778603.jpeg?auto=compress&cs=tinysrgb&w=800', quote: '"We push the boundaries of power and embedded technology to deliver world-class products."' },
+];
+
+function BoardSlideshow() {
+  const [current, setCurrent] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => setCurrent(p => (p + 1) % boardMembers.length), 4000);
+    return () => clearInterval(timer);
+  }, []);
+  const member = boardMembers[current];
+  return (
+    <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-neutral-900" style={{minHeight: '550px'}}>
+      <img src={member.image} alt={member.name} className="w-full h-full object-cover absolute inset-0 opacity-60 transition-all duration-700" style={{minHeight: '550px'}} />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+      <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+        <p className="text-white text-sm sm:text-base italic mb-4 leading-relaxed">{member.quote}</p>
+        <div className="border-t border-white/30 pt-3">
+          <p className="text-white font-bold text-base sm:text-lg">{member.name}</p>
+          <p className="text-primary text-xs sm:text-sm font-semibold tracking-wide">{member.designation}</p>
+        </div>
+        <div className="flex gap-2 mt-4">
+          {boardMembers.map((_, i) => (
+            <button key={i} onClick={() => setCurrent(i)} className={'w-2 h-2 rounded-full transition-all '+(i===current?'bg-primary w-6':'bg-white/50')} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function HeroSlideshow() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -194,9 +228,8 @@ function HeroSlideshow() {
 
         {/* TOP: Main Title */}
         <div className="container-custom mt-48">
-          <h1 className="animate-fade-in text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white leading-tight max-w-2xl">
-            Engineering the Future of{' '}
-            <span className="text-primary">Power & Embedded Technology</span>
+          <h1 className="animate-fade-in text-4xl sm:text-5xl md:text-6xl font-heading font-black text-white max-w-4xl tracking-wider" style={{lineHeight: "1.4"}}>
+            ENGINEERING THE<br/>FUTURE OF <span className="text-primary">POWER &</span><br/><span className="text-primary">EMBEDDED TECHNOLOGY</span>
           </h1>
         </div>
 
@@ -205,8 +238,8 @@ function HeroSlideshow() {
           <div className="w-full flex flex-col sm:flex-row items-end sm:items-center justify-between gap-4 border-t border-white/20 pt-4">
             <div className="flex items-center gap-6">
               <div>
-                <p className="text-white font-semibold text-base tracking-wide">{heroSlides[currentSlide].title}</p>
-                <p className="text-neutral-300 text-sm mt-1 max-w-md leading-relaxed transition-all duration-500">{heroSlides[currentSlide].subtitle}</p>
+                <p className="text-white font-semibold text-2xl tracking-wide">{heroSlides[currentSlide].title}</p>
+                <p className="text-neutral-300 text-lg mt-1 max-w-md leading-relaxed transition-all duration-500">{heroSlides[currentSlide].subtitle}</p>
               </div>
             </div>
             {/* Slide indicators */}
@@ -661,7 +694,7 @@ function SignInDropdown({ mobile = false, onClose, isScrolled = false }: { mobil
     <div className="relative" ref={ref}>
       <button
         onClick={() => { setOpen(!open); setError(''); setEmail(''); }}
-        className={`text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors ${isScrolled ? "text-neutral-700" : "text-white/90"}`}
+        className={`text-lg font-semibold flex items-center gap-1 hover:text-primary transition-colors ${isScrolled ? "text-neutral-700" : "text-white/90"}`}
       >
         Sign In
         <ChevronRight className={"w-4 h-4 transition-transform " + (open ? "rotate-90" : "")} />
@@ -759,7 +792,7 @@ function App() {
         }`}
       >
         <div className="container-custom">
-          <div className="flex items-center justify-between h-14">
+          <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <a href="#home" className="flex items-center space-x-1">
               <img src={isScrolled ? logo : logoInverted} alt="INPET Logo" className="w-12 h-12 object-contain transition-all duration-500 ease-in-out" />
@@ -775,7 +808,7 @@ function App() {
                 <a
                   key={link.name}
                   href={link.href}
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
+                  className={`text-lg font-semibold transition-colors hover:text-primary ${
                     isScrolled ? 'text-neutral-700' : 'text-white/90'
                   } ${activeSection === link.href.slice(1) ? 'text-primary' : ''}`}
                 >
@@ -1160,20 +1193,7 @@ function App() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Image */}
             <div className="reveal order-2 lg:order-1">
-              <div className="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-2xl max-h-64 sm:max-h-80 lg:max-h-none">
-                <img
-                  src="https://images.pexels.com/photo-3182811/pexels-photo-3182811.jpeg?auto=compress&cs=tinysrgb&w=800"
-                  alt="Team collaboration"
-                  className="w-full"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6">
-                  <div className="flex items-center space-x-3 sm:space-x-4 text-white">
-                    <div className="text-3xl sm:text-4xl font-heading font-bold">15+</div>
-                    <div className="text-xs sm:text-sm">Years of Engineering Excellence</div>
-                  </div>
-                </div>
-              </div>
+<BoardSlideshow />
             </div>
 
             {/* Content */}
