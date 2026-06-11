@@ -190,50 +190,48 @@ function HeroSlideshow() {
       ))}
 
       {/* Content */}
-      <div className="relative z-10 container-custom h-full flex items-center px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl">
-          <div className="animate-fade-in">
-            <span className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-primary/20 text-white rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6 backdrop-blur-sm">
-              <CircleDot className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
-              {heroSlides[currentSlide].title}
-            </span>
-          </div>
-          <h1 className="animate-fade-in text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold text-white leading-tight mb-4 sm:mb-6">
+      <div className="relative z-10 h-full flex flex-col justify-between px-4 sm:px-6 lg:px-8 py-16">
+
+        {/* TOP: Main Title */}
+        <div className="container-custom mt-48">
+          <h1 className="animate-fade-in text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white leading-tight max-w-2xl">
             Engineering the Future of{' '}
             <span className="text-primary">Power & Embedded Technology</span>
           </h1>
-          <p className="animate-fade-in text-sm sm:text-base md:text-lg text-neutral-300 mb-6 sm:mb-8 max-w-2xl transition-all duration-500">
-            {heroSlides[currentSlide].subtitle}
-          </p>
-          <div className="animate-fade-in flex flex-row gap-2">
-            <a href="#services" className="btn-primary group text-xs px-3 py-1.5">
-              Explore Our Services
-              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-            </a>
-            <a href="#about" className="btn-white text-xs px-3 py-1.5">
-              Learn More About Us
-            </a>
+        </div>
+
+        {/* BOTTOM: Info Bar */}
+        <div className="container-custom">
+          <div className="w-full flex flex-col sm:flex-row items-end sm:items-center justify-between gap-4 border-t border-white/20 pt-4">
+            <div className="flex items-center gap-6">
+              <div>
+                <p className="text-white font-semibold text-base tracking-wide">{heroSlides[currentSlide].title}</p>
+                <p className="text-neutral-300 text-sm mt-1 max-w-md leading-relaxed transition-all duration-500">{heroSlides[currentSlide].subtitle}</p>
+              </div>
+            </div>
+            {/* Slide indicators */}
+            <div className="flex space-x-2 flex-shrink-0">
+              {heroSlides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`transition-all duration-300 ${
+                    index === currentSlide
+                      ? 'w-6 h-2 bg-primary rounded-full'
+                      : 'w-2 h-2 bg-white/50 hover:bg-white/70 rounded-full'
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
+
       </div>
 
 
 
-      {/* Slide Indicators */}
-      <div className="absolute bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 z-20 flex space-x-2 sm:space-x-3">
-        {heroSlides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            className={`transition-all duration-300 ${
-              index === currentSlide
-                ? 'w-6 sm:w-8 h-2 bg-primary rounded-full'
-                : 'w-2 h-2 bg-white/50 hover:bg-white/70 rounded-full'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
+
 
 
     </div>
