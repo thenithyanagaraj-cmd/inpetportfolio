@@ -141,6 +141,46 @@ const boardMembers = [
   { name: 'Anil Mehta', designation: 'Chief Technology Officer', image: 'https://images.pexels.com/photos/3778603/pexels-photo-3778603.jpeg?auto=compress&cs=tinysrgb&w=800', quote: '"We push the boundaries of power and embedded technology to deliver world-class products."' },
 ];
 
+function MapPreview() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <div className="reveal mt-6 mb-8 rounded-xl overflow-hidden border border-neutral-200 shadow-sm cursor-pointer relative group" style={{height: "220px"}} onClick={() => setOpen(true)}>
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243.91!2d77.5484013!3d12.9760725!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae172536ebafe9%3A0x6b760f5f3cbc4b10!2sINPET+PRIVATE+LIMITED!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin"
+          width="100%"
+          height="100%"
+          style={{border: 0, pointerEvents: "none"}}
+          loading="lazy"
+        ></iframe>
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-200 flex items-center justify-center">
+          <span className="opacity-0 group-hover:opacity-100 bg-white text-neutral-900 text-xs font-semibold px-3 py-1.5 rounded-full shadow transition-all duration-200">Click to expand</span>
+        </div>
+      </div>
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={() => setOpen(false)}>
+          <div className="bg-white rounded-2xl overflow-hidden shadow-2xl w-full max-w-lg" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-4 border-b border-neutral-200">
+              <p className="font-semibold text-neutral-900 text-sm">INPET Private Limited</p>
+              <button onClick={() => setOpen(false)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-neutral-100 text-neutral-500">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243.91!2d77.5484013!3d12.9760725!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae172536ebafe9%3A0x6b760f5f3cbc4b10!2sINPET+PRIVATE+LIMITED!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin"
+              width="100%"
+              height="400"
+              style={{border: 0}}
+              allowFullScreen
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 function BoardSlideshow() {
   const [current, setCurrent] = useState(0);
   useEffect(() => {
@@ -224,12 +264,12 @@ function HeroSlideshow() {
       ))}
 
       {/* Content */}
-      <div className="relative z-10 h-full flex flex-col justify-between px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative z-10 h-full flex flex-col justify-between px-4 sm:px-6 lg:px-8 py-8">
 
         {/* TOP: Main Title */}
-        <div className="container-custom mt-48">
-          <h1 className="animate-fade-in text-4xl sm:text-5xl md:text-6xl font-heading font-black text-white max-w-4xl tracking-wider" style={{lineHeight: "1.4"}}>
-            ENGINEERING THE<br/>FUTURE OF <span className="text-primary">POWER &</span><br/><span className="text-primary">EMBEDDED TECHNOLOGY</span>
+        <div className="container-custom" style={{marginTop: "32rem"}}>
+          <h1 className="animate-fade-in text-4xl sm:text-5xl md:text-6xl font-heading font-black text-white max-w-6xl tracking-widest" style={{lineHeight: "1.4"}}>
+            ENGINEERING THE<br/>FUTURE OF <span className="text-primary" style={{WebkitTextStroke: "1px #D22B2B"}}>POWER &</span><br/><span className="text-primary" style={{WebkitTextStroke: "1px #D22B2B"}}>EMBEDDED TECHNOLOGY</span>
           </h1>
         </div>
 
@@ -389,6 +429,46 @@ const jobListings = [
   { id: 5, title: 'Test Engineer', location: 'Bangalore, India', type: 'Full-time', tag: 'Quality', exp: '2+ years', desc: 'Develop and execute test plans for power electronics and embedded products.' },
 ];
 
+const teamMembers = [
+  { name: 'Arjun Rao', role: 'Senior Embedded Engineer', image: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400', quote: 'Working at INPET has accelerated my growth — every project pushes the limits of embedded systems.' },
+  { name: 'Sneha Patel', role: 'Power Electronics Engineer', image: 'https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=400', quote: 'The culture here is innovation and support. I learnt more in two years than five elsewhere.' },
+  { name: 'Karthik Nair', role: 'PCB Design Engineer', image: 'https://images.pexels.com/photos/3778603/pexels-photo-3778603.jpeg?auto=compress&cs=tinysrgb&w=400', quote: 'INPET gives you ownership. From day one, your work ships into real products that matter.' },
+  { name: 'Divya Menon', role: 'Firmware Developer', image: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=400', quote: 'The team is brilliant and the challenges are real. This is where engineers do their best work.' },
+  { name: 'Rohit Sharma', role: 'Test Engineer', image: 'https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=400', quote: 'I love the collaborative spirit here. Everyone shares knowledge and pushes each other to excel.' },
+];
+
+function TeamSlideshow() {
+  const [current, setCurrent] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => setCurrent(p => (p + 1) % teamMembers.length), 3500);
+    return () => clearInterval(timer);
+  }, []);
+  const member = teamMembers[current];
+  return (
+    <div className="bg-white rounded-2xl shadow-xl overflow-hidden" style={{width: "300px"}}>
+      <div className="relative" style={{height: "280px"}}>
+        <img src={member.image} alt={member.name} className="w-full h-full object-cover object-top transition-all duration-700" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+      </div>
+      <div className="p-5">
+        <p className="text-neutral-600 text-xs italic leading-relaxed mb-4">&ldquo;{member.quote}&rdquo;</p>
+        <div className="flex items-center gap-2">
+          <div className="w-1 h-8 bg-primary rounded-full"></div>
+          <div>
+            <p className="text-neutral-900 font-bold text-sm">{member.name}</p>
+            <p className="text-primary text-xs font-semibold">{member.role}</p>
+          </div>
+        </div>
+        <div className="flex gap-1.5 mt-4">
+          {teamMembers.map((_, i) => (
+            <button key={i} onClick={() => setCurrent(i)} className={"h-1 rounded-full transition-all " + (i === current ? "bg-primary w-6" : "bg-neutral-300 w-2")} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SubmitResumeSection() {
   const [modalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -446,34 +526,39 @@ function SubmitResumeSection() {
             </p>
           </div>
 
-          {/* Horizontal scrollable job cards */}
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
-            {jobListings.map((job) => (
-              <div
-                key={job.id}
-                className="reveal flex-shrink-0 w-64 sm:w-72 bg-white rounded-xl border border-neutral-200 p-5 hover:border-primary hover:shadow-md transition-all duration-200 snap-start"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold bg-primary/10 text-primary px-2.5 py-1 rounded-full">{job.tag}</span>
-                  <span className="text-xs text-neutral-400 flex items-center gap-1"><Clock className="w-3 h-3" />{job.exp}</span>
-                </div>
-                <h4 className="text-sm font-bold text-neutral-900 mb-2">{job.title}</h4>
-                <p className="text-xs text-neutral-500 leading-relaxed mb-4 line-clamp-3">{job.desc}</p>
-                <div className="flex items-center gap-3 text-xs text-neutral-400">
-                  <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{job.location}</span>
-                  <span className="flex items-center gap-1"><Briefcase className="w-3 h-3" />{job.type}</span>
-                </div>
+          {/* Two column layout */}
+          <div className="grid lg:grid-cols-3 gap-10">
+            {/* LEFT: Job cards horizontal scroll + Apply button */}
+            <div className="lg:col-span-2 flex flex-col">
+              <div className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory scrollbar-hide" style={{minWidth: "100%", width: "100%"}}>
+                {jobListings.map((job) => (
+                  <div key={job.id} className="reveal flex-shrink-0 bg-white rounded-xl border border-neutral-200 p-5 hover:border-primary hover:shadow-md transition-all duration-200 snap-start" style={{width: "340px", minHeight: "380px"}}>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-semibold bg-primary/10 text-primary px-2.5 py-1 rounded-full">{job.tag}</span>
+                      <span className="text-xs text-neutral-400 flex items-center gap-1"><Clock className="w-3 h-3" />{job.exp}</span>
+                    </div>
+                    <h4 className="text-sm font-bold text-neutral-900 mb-2">{job.title}</h4>
+                    <p className="text-xs text-neutral-500 leading-relaxed mb-4 line-clamp-3">{job.desc}</p>
+                    <div className="flex items-center gap-3 text-xs text-neutral-400">
+                      <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{job.location}</span>
+                      <span className="flex items-center gap-1"><Briefcase className="w-3 h-3" />{job.type}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+              <div className="mt-12">
+                <button onClick={openModal} className="btn-primary group">
+                  Apply Now
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                </button>
+                <p className="text-xs text-neutral-400 mt-3">Submit your application and we will match you to the right role.</p>
+              </div>
+            </div>
 
-          {/* Single Apply Button */}
-          <div className="text-center mt-8">
-            <button onClick={openModal} className="btn-primary group">
-              Apply Now
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <p className="text-xs text-neutral-400 mt-3">Submit your application and we'll match you to the right role.</p>
+            {/* RIGHT: Team Slideshow */}
+            <div className="flex justify-end">
+              <TeamSlideshow />
+            </div>
           </div>
 
         </div>
@@ -694,10 +779,9 @@ function SignInDropdown({ mobile = false, onClose, isScrolled = false }: { mobil
     <div className="relative" ref={ref}>
       <button
         onClick={() => { setOpen(!open); setError(''); setEmail(''); }}
-        className={`text-lg font-semibold flex items-center gap-1 hover:text-primary transition-colors ${isScrolled ? "text-neutral-700" : "text-white/90"}`}
+        className="px-4 py-1.5 border-2 border-primary text-primary text-sm font-semibold rounded-full hover:bg-primary hover:text-white transition-all duration-200"
       >
         Sign In
-        <ChevronRight className={"w-4 h-4 transition-transform " + (open ? "rotate-90" : "")} />
       </button>
       {open && (
         <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-xl border border-neutral-200 p-4 z-50">
@@ -1274,9 +1358,10 @@ function App() {
                   <div>
                     <h3 className="font-semibold text-neutral-900 mb-0.5 sm:mb-1 text-sm sm:text-base">Location</h3>
                     <p className="text-neutral-600 text-xs sm:text-sm">
-                      INPET Pvt Ltd<br />
-                      Technology Park, Electronic City<br />
-                      Bangalore, Karnataka 560100, India
+                      INPET Private Limited<br />
+                      2nd Floor, 115, 2nd Main Rd<br />
+                      Madappa Garden, Rajajinagar<br />
+                      Bengaluru, Karnataka 560010
                     </p>
                   </div>
                 </div>
@@ -1308,6 +1393,8 @@ function App() {
                 </div>
               </div>
 
+              {/* Map */}
+              <MapPreview />
               {/* Social Links */}
               <div className="reveal stagger-4">
                 <h3 className="font-semibold text-neutral-900 mb-3 sm:mb-4 text-sm sm:text-base">Follow Us</h3>
@@ -1410,10 +1497,11 @@ function App() {
             {/* Company Info */}
             <div className="col-span-2 lg:col-span-1">
               <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
-                <div className="w-14 h-14 bg-white rounded-lg flex items-center justify-center">
-                  <img src={isScrolled ? logo : logoInverted} alt="INPET Logo" className="w-12 h-12 object-contain transition-all duration-500 ease-in-out" />
+                <img src={logoInverted} alt="INPET Logo" className="w-12 h-12 object-contain" />
+                <div className="flex flex-col justify-end" style={{minWidth: 'auto'}}>
+                  <span className="text-3xl sm:text-4xl font-black text-primary leading-tight" style={{fontFamily: 'Ethnocentric, sans-serif', letterSpacing: '0.1em', display: 'block', fontWeight: '900', WebkitTextStroke: '1px #cc0000'}}>INPET</span>
+                  <span className="text-white" style={{fontFamily: 'Arial, sans-serif', fontSize: '7px', fontWeight: '400', letterSpacing: '0.03em', lineHeight: '1.2'}}>Innovative Power and Embedded Technology</span>
                 </div>
-                <span className="text-xl sm:text-4xl font-black text-primary" style={{fontFamily: 'Ethnocentric, sans-serif', letterSpacing: '0.85em', width: 'auto', display: 'block', fontWeight: '900', WebkitTextStroke: '1px #cc0000'}}>INPET</span>
               </div>
               <p className="text-neutral-400 text-xs sm:text-sm mb-4 sm:mb-6">
                 An Innovative Power and Embedded Technology Company company delivering cutting-edge solutions for critical industries worldwide.

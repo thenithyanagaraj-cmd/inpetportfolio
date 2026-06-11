@@ -21,7 +21,7 @@
 
   body {
     font-family: 'Century Gothic', 'CenturyGothic', 'AppleGothic', Futura, sans-serif;
-    @apply antialiased text-neutral-800 overflow-x-hidden tracking-wide;
+    @apply antialiased text-neutral-800 overflow-x-hidden tracking-wide tracking-wide;
   }
 
   h1, h2, h3, h4, h5, h6 {
